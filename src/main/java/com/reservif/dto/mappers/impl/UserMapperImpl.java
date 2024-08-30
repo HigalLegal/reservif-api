@@ -6,6 +6,7 @@ import com.reservif.dto.requests.UserRequest;
 import com.reservif.dto.responses.UserResponse;
 import com.reservif.entities.ImageUser;
 import com.reservif.entities.User;
+import org.mindrot.jbcrypt.BCrypt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 
@@ -20,7 +21,7 @@ public class UserMapperImpl implements Mapper<User, UserRequest, UserResponse> {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(generateEncryptedPassword(request.getPassword()))
                 .identificationCode(request.getIdentificationCode())
                 .typeUser(request.getTypeUser())
                 .build();
@@ -49,4 +50,9 @@ public class UserMapperImpl implements Mapper<User, UserRequest, UserResponse> {
                 .thumbImageUrl(imageUser.getThumbImageUrl())
                 .build();
     }
+
+    private String generateEncryptedPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
 }
