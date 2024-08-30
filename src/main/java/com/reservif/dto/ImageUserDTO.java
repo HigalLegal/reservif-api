@@ -1,4 +1,4 @@
-package com.reservif.dto.requests;
+package com.reservif.dto;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TypeUserRequest {
+public class ImageUserDTO {
 
-    private String typeUser;
+    private String defaultImageUrl;
+
+    private String thumbImageUrl;
+
+    private String mediumImageUrl;
 
 }

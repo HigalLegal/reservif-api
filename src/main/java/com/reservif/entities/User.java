@@ -1,5 +1,7 @@
 package com.reservif.entities;
 
+import com.reservif.entities.enuns.TypeUser;
+import com.reservif.entities.utils.TypeUserConverter;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,11 +36,11 @@ public class User {
     @Column(nullable = false, name = "identification_code")
     private String identificationCode;
 
+    @Column(nullable = false)
+    @Convert(converter = TypeUserConverter.class)
+    private TypeUser typeUser;
+
     @Embedded
     private ImageUser imageUser;
-
-    @OneToOne
-    @JoinColumn(nullable = false, name = "type_user_id")
-    private TypeUser typeUser;
 
 }

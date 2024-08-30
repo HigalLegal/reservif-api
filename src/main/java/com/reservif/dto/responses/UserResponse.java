@@ -1,5 +1,8 @@
 package com.reservif.dto.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.reservif.dto.ImageUserDTO;
+import com.reservif.entities.enuns.TypeUser;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +26,8 @@ public class UserResponse {
 
     private String identificationCode;
 
-    private String urlPhoto;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private TypeUser typeUser;
 
-    private String typeUser;
+    private ImageUserDTO imageUser;
 }

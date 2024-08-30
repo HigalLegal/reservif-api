@@ -1,5 +1,7 @@
 package com.reservif.entities.enuns;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum StatusReserve {
 
     PENDING("Pendente"), APPROVED("Aprovado"), DISAPPROVED("Desaprovado");
@@ -10,6 +12,7 @@ public enum StatusReserve {
         this.statusReserve = statusReserve;
     }
 
+    @JsonValue
     public String getStatusReserve() {
         return statusReserve;
     }

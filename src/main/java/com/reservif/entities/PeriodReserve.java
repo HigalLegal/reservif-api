@@ -1,10 +1,7 @@
 package com.reservif.entities;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,7 +35,7 @@ public class PeriodReserve {
     private LocalTime endHorary;
 
     @ElementCollection
-    @Convert(converter = DayOfWeek.class)
+    @Enumerated(EnumType.ORDINAL)
     private List<DayOfWeek> daysOfWeek = new ArrayList<>();
 
 }

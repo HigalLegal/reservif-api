@@ -1,6 +1,7 @@
 package com.reservif.entities;
 
 import com.reservif.entities.enuns.StatusReserve;
+import com.reservif.entities.utils.StatusReserveConverter;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class Reserve {
     private PeriodReserve period;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = StatusReserveConverter.class)
     private StatusReserve status;
 
     @Column(nullable = false)

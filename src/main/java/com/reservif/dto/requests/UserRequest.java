@@ -1,5 +1,7 @@
 package com.reservif.dto.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.reservif.entities.enuns.TypeUser;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +25,7 @@ public class UserRequest {
 
     private String identificationCode;
 
-    private Integer typeUserId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private TypeUser typeUser;
 
 }
