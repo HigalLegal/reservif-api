@@ -43,4 +43,10 @@ public class User {
     @Embedded
     private ImageUser imageUser;
 
+    // -----------------------------------------------------------------------------------
+
+    public boolean checkForImage() {
+        return imageUser != null;
+    }
+
 }

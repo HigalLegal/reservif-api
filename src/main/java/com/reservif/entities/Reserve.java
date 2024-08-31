@@ -21,15 +21,15 @@ public class Reserve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Embedded
-    private PeriodReserve period;
-
     @Column(nullable = false)
     @Convert(converter = StatusReserveConverter.class)
     private StatusReserve status;
 
     @Column(nullable = false)
     private String observation;
+
+    @Embedded
+    private PeriodReserve period;
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "reservable_id")
