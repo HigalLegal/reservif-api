@@ -27,13 +27,13 @@ public class User {
     @Column(nullable = false, name = "last_name")
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, name = "identification_code")
+    @Column(name = "identification_code", unique = true)
     private String identificationCode;
 
     @Column(nullable = false)
