@@ -20,8 +20,5 @@ public class ReserveRequest {
 
     private Integer reservableId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private StatusReserve status;
-
     private PeriodReserveDTO periodReserve;
 }

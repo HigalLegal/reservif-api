@@ -1,4 +1,4 @@
-package com.reservif.dto.requests;
+package com.reservif.dto.responses;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReservePendingRequest {
+public class TokenResponse {
 
-    private boolean approved;
+    private String jwt;
 
 }

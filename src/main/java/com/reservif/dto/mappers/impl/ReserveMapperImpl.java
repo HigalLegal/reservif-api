@@ -7,6 +7,7 @@ import com.reservif.dto.responses.ReserveResponse;
 import com.reservif.entities.PeriodReserve;
 import com.reservif.entities.Reservable;
 import com.reservif.entities.Reserve;
+import com.reservif.entities.enuns.StatusReserve;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 
@@ -23,7 +24,7 @@ public class ReserveMapperImpl implements Mapper<Reserve, ReserveRequest, Reserv
                 .builder()
                 .observation(request.getObservation())
                 .reservable(Reservable.builder().id(request.getReservableId()).build())
-                .status(request.getStatus())
+                .status(StatusReserve.PENDING)
                 .period(periodDTOtoEntitie(request.getPeriodReserve()))
                 .build();
     }

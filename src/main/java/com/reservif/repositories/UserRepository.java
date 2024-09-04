@@ -4,12 +4,33 @@ import com.reservif.entities.User;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
+
+import static com.reservif.repositories.utils.PaginationUtils.idealLimitReturn;
 
 @ApplicationScoped
 public class UserRepository implements PanacheRepositoryBase<User, Integer> {
+
+    @Inject
+    private EntityManager entityManager;
+
+    // ---------------------------------------------------------------------------------
+
+    public List<User> findAll(int offset, int limit) {
+
+        limit = idealLimitReturn(limit, offset, (int) this.count());
+
+        return entityManager
+                .createQuery("SELECT u FROM User u", User.class)
+                .setFirstResult(Math.max(offset, 0))
+                .setMaxResults(Math.max(limit, 0))
+                .getResultList();
+    }
 
     public Optional<User> findByIdentificationCodeOrEmail(String identificationCodeOrEmail) {
 

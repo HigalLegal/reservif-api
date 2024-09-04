@@ -5,15 +5,34 @@ import com.reservif.entities.enuns.StatusReserve;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.Temporal;
 import java.util.List;
+
+import static com.reservif.repositories.utils.PaginationUtils.idealLimitReturn;
 
 @ApplicationScoped
 public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer> {
+
+    @Inject
+    private EntityManager entityManager;
+
+    // ---------------------------------------------------------------------------------
+
+    public List<Reserve> findAll(int offset, int limit) {
+
+        limit = idealLimitReturn(limit, offset, (int) this.count());
+
+        return entityManager
+                .createQuery("SELECT r FROM Reserve r ", Reserve.class)
+                .setFirstResult(Math.max(offset, 0))
+                .setMaxResults(Math.max(limit, 0))
+                .getResultList();
+    }
 
     public List<Reserve> findByDateInterval(LocalDate beginning, LocalDate end) {
         final String JPQL = generateGenericSearchByInterval("Day");
@@ -32,8 +51,9 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
     }
 
     public List<Reserve> findByReservableName(String reservableName) {
-        final String JPQL = "SELECT r FROM Reserve r where r.reservable.name = :reservableName";
-        Parameters parameters = Parameters.with("reservableName", reservableName);
+        final String JPQL = "SELECT r FROM Reserve r where lower(r.reservable.name) LIKE " +
+                "lower(concat('%', :reservableName, '%'))";
+        Parameters parameters = Parameters.with("reservableName", "%" + reservableName + "%");
 
         return this.list(JPQL, parameters);
     }
@@ -43,14 +63,6 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
         Parameters parameters = Parameters.with("statusReserve", statusReserve);
 
         return this.list(JPQL, parameters);
-    }
-
-    private String generateGenericSearchByInterval(String horaryOrDay) {
-       StringBuilder jpql = new StringBuilder("SELECT r FROM Reserve r WHERE r.period.start");
-       jpql.append(horaryOrDay + " >= :start" + horaryOrDay);
-       jpql.append(" AND r.period.end" + horaryOrDay + " <= :endDate");
-
-       return jpql.toString();
     }
 
     public void update(Reserve reserve) {
@@ -81,6 +93,30 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
             throw new EntityNotFoundException("Registro de reserva inválida");
         }
 
+    }
+
+    public void approve(boolean approved, Integer id) {
+        final String JPQL = "UPDATE Reserve r SET r.status = :status WHERE r.id = :id";
+
+        StatusReserve statusReserve = approved ? StatusReserve.APPROVED : StatusReserve.DISAPPROVED;
+
+        Parameters parameters = Parameters
+                .with("status", statusReserve)
+                .and("id", id);
+
+        int affectedRows = this.update(JPQL, parameters);
+
+        if(affectedRows <= 0) {
+            throw new EntityNotFoundException("Registro de reserva inválida");
+        }
+    }
+
+    private String generateGenericSearchByInterval(String horaryOrDay) {
+        StringBuilder jpql = new StringBuilder("SELECT r FROM Reserve r WHERE r.period.start");
+        jpql.append(horaryOrDay + " >= :start" + horaryOrDay);
+        jpql.append(" AND r.period.end" + horaryOrDay + " <= :endDate");
+
+        return jpql.toString();
     }
 
 }
