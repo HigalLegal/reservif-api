@@ -1,7 +1,6 @@
 package com.reservif.dto.mappers.impl;
 
 import com.reservif.dto.PeriodReserveDTO;
-import com.reservif.dto.mappers.Mapper;
 import com.reservif.dto.mappers.ReserveMapper;
 import com.reservif.dto.requests.ReserveRequest;
 import com.reservif.dto.responses.ReserveResponse;
@@ -10,13 +9,11 @@ import com.reservif.entities.Reservable;
 import com.reservif.entities.Reserve;
 import com.reservif.entities.enuns.StatusReserve;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
 
 import java.time.DayOfWeek;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-@Named("Reserve")
 public class ReserveMapperImpl implements ReserveMapper {
 
     @Override

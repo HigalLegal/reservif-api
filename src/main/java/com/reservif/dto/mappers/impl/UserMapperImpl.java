@@ -8,10 +8,8 @@ import com.reservif.entities.ImageUser;
 import com.reservif.entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
 
 @ApplicationScoped
-@Named("User")
 public class UserMapperImpl implements UserMapper {
 
     @Override
