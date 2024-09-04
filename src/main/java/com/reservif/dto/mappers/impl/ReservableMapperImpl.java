@@ -1,6 +1,7 @@
 package com.reservif.dto.mappers.impl;
 
 import com.reservif.dto.mappers.Mapper;
+import com.reservif.dto.mappers.ReservableMapper;
 import com.reservif.dto.requests.ReservableRequest;
 import com.reservif.dto.responses.ReservableResponse;
 import com.reservif.entities.Reservable;
@@ -9,7 +10,7 @@ import jakarta.inject.Named;
 
 @ApplicationScoped
 @Named("Reservable")
-public class ReservableMapperImpl implements Mapper<Reservable, ReservableRequest, ReservableResponse> {
+public class ReservableMapperImpl implements ReservableMapper {
 
     @Override
     public Reservable requestToEntitie(ReservableRequest request) {

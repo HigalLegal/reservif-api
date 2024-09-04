@@ -2,6 +2,7 @@ package com.reservif.dto.mappers.impl;
 
 import com.reservif.dto.PeriodReserveDTO;
 import com.reservif.dto.mappers.Mapper;
+import com.reservif.dto.mappers.ReserveMapper;
 import com.reservif.dto.requests.ReserveRequest;
 import com.reservif.dto.responses.ReserveResponse;
 import com.reservif.entities.PeriodReserve;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Named("Reserve")
-public class ReserveMapperImpl implements Mapper<Reserve, ReserveRequest, ReserveResponse> {
+public class ReserveMapperImpl implements ReserveMapper {
 
     @Override
     public Reserve requestToEntitie(ReserveRequest request) {

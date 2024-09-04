@@ -1,7 +1,7 @@
 package com.reservif.dto.mappers.impl;
 
 import com.reservif.dto.ImageUserDTO;
-import com.reservif.dto.mappers.Mapper;
+import com.reservif.dto.mappers.UserMapper;
 import com.reservif.dto.requests.UserRequest;
 import com.reservif.dto.responses.UserResponse;
 import com.reservif.entities.ImageUser;
@@ -12,7 +12,7 @@ import jakarta.inject.Named;
 
 @ApplicationScoped
 @Named("User")
-public class UserMapperImpl implements Mapper<User, UserRequest, UserResponse> {
+public class UserMapperImpl implements UserMapper {
 
     @Override
     public User requestToEntitie(UserRequest request) {
