@@ -20,7 +20,8 @@ dependencies {
     implementation 'io.quarkus:quarkus-arc'
     implementation 'io.quarkus:quarkus-hibernate-orm'
     implementation 'io.quarkus:quarkus-rest'
-    implementation("de.svenkubiak:jBCrypt:0.4.3")
+    implementation 'de.svenkubiak:jBCrypt:0.4.3'
+    implementation 'io.quarkus:quarkus-rest-client-reactive-jackson'
 
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'

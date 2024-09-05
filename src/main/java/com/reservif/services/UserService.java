@@ -5,6 +5,7 @@ import com.reservif.dto.requests.UserRequest;
 import com.reservif.dto.responses.TokenResponse;
 import com.reservif.dto.responses.UserResponse;
 
+import java.io.File;
 import java.util.List;
 
 public interface UserService {
@@ -15,9 +16,9 @@ public interface UserService {
 
     TokenResponse listByIdentificationCodeOrEmail(UserLoginRequest login);
 
-    void create(UserRequest userRequest);
+    void create(UserRequest userRequest, File image);
 
-    void update(UserRequest userRequest, Integer id);
+    void update(UserRequest userRequest, File image, Integer id);
 
     void deleteById(Integer id);
 
