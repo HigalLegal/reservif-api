@@ -20,5 +20,7 @@ public class ReserveRequest {
 
     private Integer reservableId;
 
+    private Integer userId;
+
     private PeriodReserveDTO periodReserve;
 }

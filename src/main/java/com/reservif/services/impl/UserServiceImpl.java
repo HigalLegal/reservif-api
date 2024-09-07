@@ -2,6 +2,7 @@ package com.reservif.services.impl;
 
 import com.reservif.clients.ApiImgBB;
 import com.reservif.clients.model.Root;
+import com.reservif.configs.jwt.TokenGenerator;
 import com.reservif.dto.mappers.UserMapper;
 import com.reservif.dto.requests.UserLoginRequest;
 import com.reservif.dto.requests.UserRequest;
@@ -9,6 +10,7 @@ import com.reservif.dto.responses.TokenResponse;
 import com.reservif.dto.responses.UserResponse;
 import com.reservif.entities.ImageUser;
 import com.reservif.entities.User;
+import com.reservif.exceptions.PasswordException;
 import com.reservif.repositories.KeyImgBbRepository;
 import com.reservif.repositories.UserRepository;
 import com.reservif.services.UserService;
@@ -16,6 +18,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.util.List;
@@ -32,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Inject
     private UserMapper userMapper;
+
+    @Inject
+    private TokenGenerator tokenGenerator;
 
     @RestClient
     private ApiImgBB externalApiForImage;
@@ -54,7 +60,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenResponse listByIdentificationCodeOrEmail(UserLoginRequest login) {
-        return null;
+
+        User user = userRepository
+                .findByIdentificationCodeOrEmail(login.getEmailOrCode())
+                .orElseThrow(() -> new EntityNotFoundException("Email ou código SUAP inexistente."));
+
+        if(!checkPassword(login.getPassword(), user.getPassword())) {
+            throw new PasswordException("Senha incorreta");
+        }
+
+        String token = tokenGenerator.createToken(user);
+
+        return new TokenResponse(token);
     }
 
     @Override
@@ -102,4 +119,9 @@ public class UserServiceImpl implements UserService {
                 .thumbImageUrl(dataAPI.thumbUrlImage())
                 .build();
     }
+
+    private boolean checkPassword(String password, String encriptedPassword) {
+        return BCrypt.checkpw(password, encriptedPassword);
+    }
+
 }

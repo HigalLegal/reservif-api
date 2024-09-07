@@ -35,4 +35,8 @@ public class Reserve {
     @JoinColumn(nullable = false, name = "reservable_id")
     private Reservable reservable;
 
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
+
 }

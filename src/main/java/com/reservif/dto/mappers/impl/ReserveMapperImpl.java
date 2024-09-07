@@ -3,10 +3,12 @@ package com.reservif.dto.mappers.impl;
 import com.reservif.dto.PeriodReserveDTO;
 import com.reservif.dto.mappers.ReserveMapper;
 import com.reservif.dto.requests.ReserveRequest;
+import com.reservif.dto.responses.ReservationUserResponse;
 import com.reservif.dto.responses.ReserveResponse;
 import com.reservif.entities.PeriodReserve;
 import com.reservif.entities.Reservable;
 import com.reservif.entities.Reserve;
+import com.reservif.entities.User;
 import com.reservif.entities.enuns.StatusReserve;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -24,17 +26,20 @@ public class ReserveMapperImpl implements ReserveMapper {
                 .reservable(Reservable.builder().id(request.getReservableId()).build())
                 .status(StatusReserve.PENDING)
                 .period(periodDTOtoEntitie(request.getPeriodReserve()))
+                .user(User.builder().id(request.getUserId()).build())
                 .build();
     }
 
     @Override
     public ReserveResponse entitieToResponse(Reserve entitie) {
-               return ReserveResponse.builder()
-                .observation(entitie.getObservation())
-                .reservable(entitie.getReservable().getName())
-                .status(entitie.getStatus())
-                .period(periodEntitieToDTO(entitie.getPeriod()))
-                .build();
+               return ReserveResponse
+                    .builder()
+                    .observation(entitie.getObservation())
+                    .reservable(entitie.getReservable().getName())
+                    .status(entitie.getStatus())
+                    .period(periodEntitieToDTO(entitie.getPeriod()))
+                    .user(userToReservationUser(entitie.getUser()))
+                    .build();
     }
 
     private PeriodReserve periodDTOtoEntitie(PeriodReserveDTO periodReserveDTO) {
@@ -64,6 +69,17 @@ public class ReserveMapperImpl implements ReserveMapper {
                         .stream()
                         .map(dayOfWeek -> dayOfWeek.getValue())
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    private ReservationUserResponse userToReservationUser(User user) {
+        return ReservationUserResponse
+                .builder()
+                .id(user.getId())
+                .fullName(user.getFirstName().concat(" ").concat(user.getLastName()))
+                .email(user.getEmail())
+                .identificationCode(user.getIdentificationCode())
+                .typeUser(user.getTypeUser())
                 .build();
     }
 

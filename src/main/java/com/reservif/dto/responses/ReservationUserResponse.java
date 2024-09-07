@@ -1,8 +1,7 @@
 package com.reservif.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.reservif.dto.PeriodReserveDTO;
-import com.reservif.entities.enuns.StatusReserve;
+import com.reservif.entities.enuns.TypeUser;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,19 +13,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReserveResponse {
+public class ReservationUserResponse {
 
     private Integer id;
 
-    private String observation;
+    private String fullName;
 
-    private String reservable;
+    private String email;
+
+    private String identificationCode;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private StatusReserve status;
-
-    private PeriodReserveDTO period;
-
-    private ReservationUserResponse user;
+    private TypeUser typeUser;
 
 }
