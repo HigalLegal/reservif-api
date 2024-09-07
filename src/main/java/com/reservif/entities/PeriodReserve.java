@@ -25,7 +25,7 @@ public class PeriodReserve {
     @Column(nullable = false, name = "start_day")
     private LocalDate startDay;
 
-    @Column(nullable = false, name = "end_day")
+    @Column(name = "end_day")
     private LocalDate endDay;
 
     @Column(nullable = false, name = "start_horary")
