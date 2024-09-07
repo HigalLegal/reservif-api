@@ -25,7 +25,7 @@ public interface ReserveService {
 
     void create(ReserveRequest reserveRequest);
 
-    void updateById(ReservableRequest reservableRequest, Integer id);
+    void updateById(ReserveRequest reserveRequest, Integer id);
 
     void approve(boolean approved, Integer id);
 
