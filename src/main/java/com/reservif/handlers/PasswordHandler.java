@@ -4,7 +4,9 @@ import com.reservif.exceptions.PasswordException;
 import com.reservif.handlers.entities.ErrorMessage;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
+@Provider
 public class PasswordHandler implements ExceptionMapper<PasswordException> {
 
     @Override

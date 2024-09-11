@@ -5,31 +5,38 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.reservif.repositories.utils.PaginationUtils.idealLimitReturn;
+import static com.reservif.repositories.utils.PaginationUtils.treatNullInteger;
 
 @ApplicationScoped
 public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
     @Inject
-    private EntityManager entityManager;
+    @ConfigProperty(name = "pagination.defaultPage")
+    private int defaultPage;
 
-    // ---------------------------------------------------------------------------------
+    @Inject
+    @ConfigProperty(name = "pagination.defaultPageSize")
+    private int defaultPageSize;
 
-    public List<User> findAll(int offset, int limit) {
+    public List<User> findAll(Integer page, Integer pageSize) {
 
-        limit = idealLimitReturn(limit, offset, (int) this.count());
+        int defaultPage = treatNullInteger(page, this.defaultPage);
+        int defaultPageSize = treatNullInteger(page, this.defaultPageSize);
 
-        return entityManager
-                .createQuery("SELECT u FROM User u", User.class)
-                .setFirstResult(Math.max(offset, 0))
-                .setMaxResults(Math.max(limit, 0))
-                .getResultList();
+        if(page == null && pageSize == null) {
+            return this.findAll().list();
+        }
+
+        return this
+                .findAll()
+                .page(defaultPage, defaultPageSize)
+                .list();
     }
 
     public Optional<User> findByIdentificationCodeOrEmail(String identificationCodeOrEmail) {

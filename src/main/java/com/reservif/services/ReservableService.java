@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ReservableService {
 
-    List<ReservableResponse> listAll(int offset, int limit);
+    List<ReservableResponse> listAll(Integer page, Integer pageSize);
 
     List<ReservableResponse> listByName(String name);
 

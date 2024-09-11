@@ -26,9 +26,9 @@ public class ReserveServiceImpl implements ReserveService {
     // ------------------------------------------------------------------------------------------------
 
     @Override
-    public List<ReserveResponse> listAll(int offset, int limit) {
+    public List<ReserveResponse> listAll(Integer page, Integer pageSize) {
         return reserveRepository
-                .findAll(offset, limit)
+                .findAll(page, pageSize)
                 .stream()
                 .map(reserveMapper::entitieToResponse)
                 .collect(Collectors.toList());
@@ -65,6 +65,24 @@ public class ReserveServiceImpl implements ReserveService {
     public List<ReserveResponse> listByStatus(StatusReserve statusReserve) {
         return reserveRepository
                 .findByStatus(statusReserve)
+                .stream()
+                .map(reserveMapper::entitieToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReserveResponse> listByUser(Integer userID) {
+        return reserveRepository
+                .findByUserId(userID)
+                .stream()
+                .map(reserveMapper::entitieToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReserveResponse> listByReservable(Integer reservableID) {
+        return reserveRepository
+                .findByReservableId(reservableID)
                 .stream()
                 .map(reserveMapper::entitieToResponse)
                 .collect(Collectors.toList());

@@ -1,18 +1,18 @@
 package com.reservif.handlers;
 
+import com.reservif.exceptions.DateException;
 import com.reservif.handlers.entities.ErrorMessage;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class EntityNotFoundHandler implements ExceptionMapper<EntityNotFoundException> {
+public class DateHandler implements ExceptionMapper<DateException> {
 
     @Override
-    public Response toResponse(EntityNotFoundException e) {
+    public Response toResponse(DateException e) {
 
-        var error = new ErrorMessage("Recurso não encontrado", 404, e.getMessage());
+        var error = new ErrorMessage("Data nula", 400, e.getMessage());
 
         return Response
                 .status(error.getStatusCode())

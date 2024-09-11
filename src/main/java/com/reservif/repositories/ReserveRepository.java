@@ -2,39 +2,57 @@ package com.reservif.repositories;
 
 import com.reservif.entities.Reserve;
 import com.reservif.entities.enuns.StatusReserve;
+import com.reservif.exceptions.DateException;
+import com.reservif.exceptions.HoraryException;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.reservif.repositories.utils.PaginationUtils.idealLimitReturn;
+import static com.reservif.repositories.utils.PaginationUtils.treatNullInteger;
 
 @ApplicationScoped
 public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer> {
 
     @Inject
-    private EntityManager entityManager;
+    @ConfigProperty(name = "pagination.defaultPage")
+    private int defaultPage;
 
-    // ---------------------------------------------------------------------------------
+    @Inject
+    @ConfigProperty(name = "pagination.defaultPageSize")
+    private int defaultPageSize;
 
-    public List<Reserve> findAll(int offset, int limit) {
+    public List<Reserve> findAll(Integer page, Integer pageSize) {
 
-        limit = idealLimitReturn(limit, offset, (int) this.count());
+        int defaultPage = treatNullInteger(page, this.defaultPage);
+        int defaultPageSize = treatNullInteger(page, this.defaultPageSize);
 
-        return entityManager
-                .createQuery("SELECT r FROM Reserve r ", Reserve.class)
-                .setFirstResult(Math.max(offset, 0))
-                .setMaxResults(Math.max(limit, 0))
-                .getResultList();
+        if(page == null && pageSize == null) {
+            return this.findAll().list();
+        }
+
+        return this
+                .findAll()
+                .page(defaultPage, defaultPageSize)
+                .list();
     }
 
     public List<Reserve> findByDateInterval(LocalDate beginning, LocalDate end) {
+
+        if(beginning == null) {
+            throw new DateException("A data de início não pode ser nula!");
+        }
+
+        if(end == null) {
+            throw new DateException("A data de fim não pode ser nula!");
+        }
+
         final String JPQL = generateGenericSearchByInterval("Day");
         Parameters parameters = Parameters
                 .with("startDay", beginning)
@@ -43,6 +61,15 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
     }
 
     public List<Reserve> findByHoraryInterval(LocalTime beginning, LocalTime end) {
+
+        if(beginning == null) {
+            throw new HoraryException("O horário de início não pode ser nulo!");
+        }
+
+        if(end == null) {
+            throw new HoraryException("O horário de fim não pode ser nulo!");
+        }
+
         final String JPQL = generateGenericSearchByInterval("Horary");
         Parameters parameters = Parameters
                 .with("startHorary", beginning)
@@ -59,8 +86,27 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
     }
 
     public List<Reserve> findByStatus(StatusReserve statusReserve) {
+
+        if(statusReserve == null) {
+            this.findAll().list();
+        }
+
         final String JPQL = "SELECT r FROM Reserve r where r.statusReserve = :statusReserve";
         Parameters parameters = Parameters.with("statusReserve", statusReserve);
+
+        return this.list(JPQL, parameters);
+    }
+
+    public List<Reserve> findByUserId(Integer userID) {
+        final String JPQL = "SELECT r FROM Reserve r where r.user.id = :userID";
+        Parameters parameters = Parameters.with("userID", userID);
+
+        return this.list(JPQL, parameters);
+    }
+
+    public List<Reserve> findByReservableId(Integer reservableID) {
+        final String JPQL = "SELECT r FROM Reserve r where r.reservable.id = reservableID";
+        Parameters parameters = Parameters.with("reservableID", reservableID);
 
         return this.list(JPQL, parameters);
     }

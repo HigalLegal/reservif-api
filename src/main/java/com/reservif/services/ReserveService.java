@@ -1,6 +1,5 @@
 package com.reservif.services;
 
-import com.reservif.dto.requests.ReservableRequest;
 import com.reservif.dto.requests.ReserveRequest;
 import com.reservif.dto.responses.ReserveResponse;
 import com.reservif.entities.enuns.StatusReserve;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public interface ReserveService {
 
-    List<ReserveResponse> listAll(int offset, int limit);
+    List<ReserveResponse> listAll(Integer page, Integer pageSize);
 
     List<ReserveResponse> listByDateInterval(LocalDate beginning, LocalDate end);
 
@@ -20,6 +19,10 @@ public interface ReserveService {
     List<ReserveResponse> listByReservableName(String reservableName);
 
     List<ReserveResponse> listByStatus(StatusReserve statusReserve);
+
+    List<ReserveResponse> listByUser(Integer userID);
+
+    List<ReserveResponse> listByReservable(Integer reservableID);
 
     ReserveResponse byId(Integer id);
 

@@ -23,9 +23,9 @@ public class ReservableServiceImpl implements ReservableService {
     // -----------------------------------------------------------------------------------------------------
 
     @Override
-    public List<ReservableResponse> listAll(int offset, int limit) {
+    public List<ReservableResponse> listAll(Integer page, Integer pageSize) {
         return reservableRepository
-                .findAll(offset, limit)
+                .findAll(page, pageSize)
                 .stream()
                 .map(reservableMapper::entitieToResponse)
                 .collect(Collectors.toList());

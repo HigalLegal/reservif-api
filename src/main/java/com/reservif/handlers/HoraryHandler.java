@@ -1,18 +1,18 @@
 package com.reservif.handlers;
 
+import com.reservif.exceptions.HoraryException;
 import com.reservif.handlers.entities.ErrorMessage;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class EntityNotFoundHandler implements ExceptionMapper<EntityNotFoundException> {
+public class HoraryHandler implements ExceptionMapper<HoraryException> {
 
     @Override
-    public Response toResponse(EntityNotFoundException e) {
+    public Response toResponse(HoraryException e) {
 
-        var error = new ErrorMessage("Recurso não encontrado", 404, e.getMessage());
+        var error = new ErrorMessage("Horário nulo", 400, e.getMessage());
 
         return Response
                 .status(error.getStatusCode())

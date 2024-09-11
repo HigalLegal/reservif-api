@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserResponse> listAll(int offset, int limit);
+    List<UserResponse> listAll(Integer page, Integer pageSize);
 
     UserResponse byId(Integer id);
 
-    TokenResponse listByIdentificationCodeOrEmail(UserLoginRequest login);
+    TokenResponse login(UserLoginRequest login);
 
     void create(UserRequest userRequest, File image);
 

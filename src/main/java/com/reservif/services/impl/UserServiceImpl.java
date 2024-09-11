@@ -45,9 +45,9 @@ public class UserServiceImpl implements UserService {
     // ----------------------------------------------------------------------------
 
     @Override
-    public List<UserResponse> listAll(int offset, int limit) {
+    public List<UserResponse> listAll(Integer page, Integer pageSize) {
         return userRepository
-                .findAll(offset, limit)
+                .findAll(page, pageSize)
                 .stream()
                 .map(user -> userMapper.entitieToResponse(user))
                 .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokenResponse listByIdentificationCodeOrEmail(UserLoginRequest login) {
+    public TokenResponse login(UserLoginRequest login) {
 
         User user = userRepository
                 .findByIdentificationCodeOrEmail(login.getEmailOrCode())
