@@ -159,7 +159,7 @@ public class ReserveResourceImpl implements ReserveResource {
     public Response deleteById(Integer id) {
         reserveService.deleteById(id);
         return Response
-                .status(Response.Status.OK)
+                .status(Response.Status.NO_CONTENT)
                 .build();
     }
 }
