@@ -30,7 +30,7 @@ public interface ReserveService {
 
     void updateById(ReserveRequest reserveRequest, Integer id);
 
-    void approve(boolean approved, Integer id);
+    void approve(Boolean approved, Integer id);
 
     void deleteById(Integer id);
 }

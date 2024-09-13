@@ -141,7 +141,7 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
 
     }
 
-    public void approve(boolean approved, Integer id) {
+    public void approve(Boolean approved, Integer id) {
         final String JPQL = "UPDATE Reserve r SET r.status = :status WHERE r.id = :id";
 
         StatusReserve statusReserve = approved ? StatusReserve.APPROVED : StatusReserve.DISAPPROVED;

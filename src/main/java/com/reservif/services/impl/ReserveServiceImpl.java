@@ -113,7 +113,7 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public void approve(boolean approved, Integer id) {
+    public void approve(Boolean approved, Integer id) {
         reserveRepository.approve(approved, id);
     }
 
