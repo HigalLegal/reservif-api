@@ -6,12 +6,16 @@ import com.reservif.dto.responses.ReservableResponse;
 import com.reservif.entities.Reservable;
 import com.reservif.repositories.ReservableRepository;
 import com.reservif.services.ReservableService;
+import jakarta.annotation.Nullable;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.ws.rs.QueryParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class ReservableServiceImpl implements ReservableService {
 
     @Inject
@@ -23,7 +27,10 @@ public class ReservableServiceImpl implements ReservableService {
     // -----------------------------------------------------------------------------------------------------
 
     @Override
-    public List<ReservableResponse> listAll(Integer page, Integer pageSize) {
+    public List<ReservableResponse> listAll(
+            @QueryParam("page") @Nullable Integer page,
+            @QueryParam("pageSize") @Nullable Integer pageSize
+    ) {
         return reservableRepository
                 .findAll(page, pageSize)
                 .stream()

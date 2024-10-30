@@ -3,6 +3,7 @@ package com.reservif.resources;
 import com.reservif.dto.requests.ApprovalRequest;
 import com.reservif.dto.requests.ReserveRequest;
 import com.reservif.entities.enuns.StatusReserve;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDate;
@@ -26,11 +27,11 @@ public interface ReserveResource {
 
     Response byId(Integer id);
 
-    Response create(ReserveRequest reserveRequest);
+    Response create(@Valid ReserveRequest reserveRequest);
 
-    Response updateById(Integer id, ReserveRequest reserveRequest);
+    Response updateById(Integer id, @Valid ReserveRequest reserveRequest);
 
-    Response approve(Integer id, ApprovalRequest approved);
+    Response approve(Integer id, @Valid ApprovalRequest approved);
 
     Response deleteById(Integer id);
 

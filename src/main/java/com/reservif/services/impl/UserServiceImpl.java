@@ -14,9 +14,11 @@ import com.reservif.exceptions.PasswordException;
 import com.reservif.repositories.KeyImgBbRepository;
 import com.reservif.repositories.UserRepository;
 import com.reservif.services.UserService;
+import jakarta.annotation.Nullable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.ws.rs.QueryParam;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -45,7 +47,10 @@ public class UserServiceImpl implements UserService {
     // ----------------------------------------------------------------------------
 
     @Override
-    public List<UserResponse> listAll(Integer page, Integer pageSize) {
+    public List<UserResponse> listAll(
+            @QueryParam("page") @Nullable Integer page,
+            @QueryParam("pageSize") @Nullable Integer pageSize
+    ) {
         return userRepository
                 .findAll(page, pageSize)
                 .stream()
@@ -77,6 +82,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(UserRequest userRequest, File image) {
         User user = userMapper.requestToEntitie(userRequest);
+
+        System.out.println(user);
 
         if(image != null) {
             ImageUser imageUser = uploadImage(keyAPI.returnKey(), image);

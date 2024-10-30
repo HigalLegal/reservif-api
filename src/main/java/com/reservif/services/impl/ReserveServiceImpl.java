@@ -7,6 +7,7 @@ import com.reservif.entities.Reserve;
 import com.reservif.entities.enuns.StatusReserve;
 import com.reservif.repositories.ReserveRepository;
 import com.reservif.services.ReserveService;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class ReserveServiceImpl implements ReserveService {
 
     @Inject

@@ -7,10 +7,12 @@ import com.reservif.dto.responses.UserResponse;
 import com.reservif.resources.UserResource;
 import com.reservif.services.UserService;
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -35,7 +37,10 @@ public class UserResourceImpl implements UserResource {
     @Override
     @GET
     @RolesAllowed("Administrador")
-    public Response listAll(Integer page, Integer pageSize) {
+    public Response listAll(
+            @QueryParam("page") @Nullable Integer page,
+            @QueryParam("pageSize") @Nullable Integer pageSize
+    ) {
         List<UserResponse> responses = userService.listAll(page, pageSize);
         return Response.ok(responses).build();
     }
@@ -60,9 +65,10 @@ public class UserResourceImpl implements UserResource {
 
     @Override
     @POST
-    @RolesAllowed("Administrador")
+    @Transactional
+    @PermitAll
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response create(@RestForm @PartType(MediaType.APPLICATION_JSON) @Valid UserRequest userRequest,
+    public Response create(@RestForm @PartType(MediaType.APPLICATION_JSON) UserRequest userRequest,
                            @RestForm("image") @PartType(MediaType.MULTIPART_FORM_DATA) File image) {
         userService.create(userRequest, image);
         return Response.status(Response.Status.CREATED).build();
@@ -70,6 +76,7 @@ public class UserResourceImpl implements UserResource {
 
     @Override
     @PUT
+    @Transactional
     @Path("/{id}")
     @Authenticated
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -82,6 +89,7 @@ public class UserResourceImpl implements UserResource {
 
     @Override
     @DELETE
+    @Transactional
     @Path("/{id}")
     @RolesAllowed("Administrador")
     public Response deleteById(@PathParam("id") Integer id) {

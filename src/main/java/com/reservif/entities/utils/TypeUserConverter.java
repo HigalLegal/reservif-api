@@ -9,11 +9,25 @@ public class TypeUserConverter implements AttributeConverter<TypeUser, String> {
 
     @Override
     public String convertToDatabaseColumn(TypeUser typeUser) {
-        return typeUser.getTypeUser();
+        if (typeUser == null) {
+            return null;
+        }
+        return typeUser.getTypeUser(); // Armazena "Professor" ou "Administrador" no banco de dados
     }
 
     @Override
-    public TypeUser convertToEntityAttribute(String s) {
-        return TypeUser.valueOf(s);
+    public TypeUser convertToEntityAttribute(String dbData) {
+        if (dbData == null || dbData.isEmpty()) {
+            return null;
+        }
+
+        // Percorre os valores do enum e encontra o correspondente
+        for (TypeUser type : TypeUser.values()) {
+            if (type.getTypeUser().equals(dbData)) {
+                return type;
+            }
+        }
+
+        throw new IllegalArgumentException("Valor desconhecido: " + dbData);
     }
 }

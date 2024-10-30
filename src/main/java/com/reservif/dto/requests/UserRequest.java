@@ -31,7 +31,6 @@ public class UserRequest {
     @Min(value = 5, message = "Senha deve ter ao menos 5 caracteres")
     private String password;
 
-    @NotBlank(message = "Digite o código SUAP")
     private String identificationCode;
 
     @NotNull(message = "Informe se o usuário é professor ou administrador")

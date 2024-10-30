@@ -3,6 +3,7 @@ package com.reservif.services;
 import com.reservif.dto.requests.ReserveRequest;
 import com.reservif.dto.responses.ReserveResponse;
 import com.reservif.entities.enuns.StatusReserve;
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,9 +27,9 @@ public interface ReserveService {
 
     ReserveResponse byId(Integer id);
 
-    void create(ReserveRequest reserveRequest);
+    void create(@Valid ReserveRequest reserveRequest);
 
-    void updateById(ReserveRequest reserveRequest, Integer id);
+    void updateById(@Valid ReserveRequest reserveRequest, Integer id);
 
     void approve(Boolean approved, Integer id);
 
