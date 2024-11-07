@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -56,6 +57,7 @@ public class ReservableResourceImpl implements ReservableResource {
 
     @Override
     @POST
+    @Transactional
     @RolesAllowed("Administrador")
     public Response create(@Valid ReservableRequest reservableRequest) {
         reservableService.create(reservableRequest);
@@ -65,6 +67,7 @@ public class ReservableResourceImpl implements ReservableResource {
     @Override
     @PUT
     @Path("/{id}")
+    @Transactional
     @RolesAllowed("Administrador")
     public Response updateById(@PathParam("id") Integer id, ReservableRequest reservableRequest) {
         reservableService.updateById(reservableRequest, id);
@@ -74,6 +77,7 @@ public class ReservableResourceImpl implements ReservableResource {
     @Override
     @DELETE
     @Path("/{id}")
+    @Transactional
     @RolesAllowed("Administrador")
     public Response deleteById(@PathParam("id") Integer id) {
         reservableService.deleteById(id);

@@ -83,8 +83,6 @@ public class UserServiceImpl implements UserService {
     public void create(UserRequest userRequest, File image) {
         User user = userMapper.requestToEntitie(userRequest);
 
-        System.out.println(user);
-
         if(image != null) {
             ImageUser imageUser = uploadImage(keyAPI.returnKey(), image);
             user.setImageUser(imageUser);
@@ -119,10 +117,11 @@ public class UserServiceImpl implements UserService {
     private ImageUser uploadImage(String key, File image) {
         Root dataAPI = externalApiForImage.uploadImage(key, image);
 
+        System.out.println(dataAPI.getData().getMedium());
+
         return ImageUser
                 .builder()
                 .defaultImageUrl(dataAPI.defaultUrlImage())
-                .mediumImageUrl(dataAPI.mediumUrlImage())
                 .thumbImageUrl(dataAPI.thumbUrlImage())
                 .build();
     }

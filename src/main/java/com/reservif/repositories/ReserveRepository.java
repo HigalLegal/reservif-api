@@ -112,32 +112,15 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
     }
 
     public void update(Reserve reserve) {
-        final String JPQL = "UPDATE Reserve r " +
-                "SET r.status = :status," +
-                "    r.observation = :observation," +
-                "    r.period.startDay = :startDay," +
-                "    r.period.endDay = :endDay, " +
-                "    r.period.startHorary = :startHorary," +
-                "    r.period.endHorary = :endHorary," +
-                "    r.period.daysOfWeek = :daysOfWeek," +
-                "    r.reservable.id = :reservableId" +
-                " WHERE r.id = :id";
+        
+        Reserve newReserve = this
+                .findByIdOptional(reserve.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Reserva inexistente"));
 
-        Parameters parameters = Parameters.with("status", reserve.getStatus())
-                .and("observation", reserve.getObservation())
-                .and("startDay", reserve.getPeriod().getStartDay())
-                .and("endDay", reserve.getPeriod().getEndDay())
-                .and("startHorary", reserve.getPeriod().getStartHorary())
-                .and("endHorary", reserve.getPeriod().getEndHorary())
-                .and("daysOfWeek", reserve.getPeriod().getDaysOfWeek())
-                .and("reservableId", reserve.getReservable().getId())
-                .and("id", reserve.getId());
+        newReserve.setObservation(reserve.getObservation());
+        newReserve.updatePeriodReserve(reserve.getPeriod());
 
-        int affectedRows = this.update(JPQL, parameters);
-
-        if(affectedRows <= 0) {
-            throw new EntityNotFoundException("Registro de reserva inválida");
-        }
+        this.getEntityManager().merge(newReserve);
 
     }
 

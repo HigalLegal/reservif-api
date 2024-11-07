@@ -34,6 +34,7 @@ public class ReserveMapperImpl implements ReserveMapper {
     public ReserveResponse entitieToResponse(Reserve entitie) {
                return ReserveResponse
                     .builder()
+                    .id(entitie.getId())
                     .observation(entitie.getObservation())
                     .reservable(entitie.getReservable().getName())
                     .status(entitie.getStatus())

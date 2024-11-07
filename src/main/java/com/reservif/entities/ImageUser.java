@@ -22,7 +22,4 @@ public class ImageUser {
     @Column(name = "thumb_image_url")
     private String thumbImageUrl;
 
-    @Column(name = "medium_image_url")
-    private String mediumImageUrl;
-
 }

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @RegisterForReflection
 @Data
@@ -38,5 +40,9 @@ public class Reserve {
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
+
+    public void updatePeriodReserve(PeriodReserve period) {
+        this.period = period;
+    }
 
 }

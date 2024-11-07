@@ -13,6 +13,7 @@ import jakarta.annotation.Nullable;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -114,6 +115,7 @@ public class ReserveResourceImpl implements ReserveResource {
 
     @Override
     @POST
+    @Transactional
     @Authenticated
     public Response create(@Valid ReserveRequest reserveRequest) {
         reserveService.create(reserveRequest);
@@ -125,15 +127,9 @@ public class ReserveResourceImpl implements ReserveResource {
     @Override
     @PUT
     @Path("/{id}")
+    @Transactional
     @Authenticated
     public Response updateById(@PathParam("id") Integer id, @Valid ReserveRequest reserveRequest) {
-        Integer userID = Integer.parseInt(jsonWebToken.getClaim("userID").toString());
-        Set<String> roles = jsonWebToken.getGroups();
-
-        if(userID != reserveRequest.getUserId() && !roles.contains("Administrador")) {
-            throw new PermissionException("Você não tem permissão para editar essa reserva");
-        }
-
         reserveService.updateById(reserveRequest, id);
 
         return Response
@@ -144,6 +140,7 @@ public class ReserveResourceImpl implements ReserveResource {
     @Override
     @PATCH
     @Path("/{id}")
+    @Transactional
     @RolesAllowed("Administrador")
     public Response approve(@PathParam("id") Integer id, @Valid ApprovalRequest approved) {
         reserveService.approve(approved.getApproved(), id);
@@ -155,6 +152,7 @@ public class ReserveResourceImpl implements ReserveResource {
     @Override
     @DELETE
     @Path("/{id}")
+    @Transactional
     @RolesAllowed("Administrador")
     public Response deleteById(Integer id) {
         reserveService.deleteById(id);

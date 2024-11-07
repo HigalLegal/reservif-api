@@ -68,7 +68,7 @@ public class UserResourceImpl implements UserResource {
     @Transactional
     @PermitAll
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response create(@RestForm @PartType(MediaType.APPLICATION_JSON) UserRequest userRequest,
+    public Response create(@RestForm @PartType(MediaType.APPLICATION_JSON) @Valid UserRequest userRequest,
                            @RestForm("image") @PartType(MediaType.MULTIPART_FORM_DATA) File image) {
         userService.create(userRequest, image);
         return Response.status(Response.Status.CREATED).build();

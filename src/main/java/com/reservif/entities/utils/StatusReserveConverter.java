@@ -9,11 +9,20 @@ public class StatusReserveConverter implements AttributeConverter<StatusReserve,
 
     @Override
     public String convertToDatabaseColumn(StatusReserve statusReserve) {
-        return statusReserve.getStatusReserve();
+        return statusReserve != null ? statusReserve.getStatusReserve() : null;
     }
 
     @Override
-    public StatusReserve convertToEntityAttribute(String s) {
-        return StatusReserve.valueOf(s);
+    public StatusReserve convertToEntityAttribute(String dbData) {
+        if (dbData == null) {
+            return null;
+        }
+
+        for (StatusReserve status : StatusReserve.values()) {
+            if (status.getStatusReserve().equals(dbData)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Valor desconhecido para StatusReserve: " + dbData);
     }
 }

@@ -68,7 +68,7 @@ public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
         if(user.checkForImage()) {
             jpql.append(", u.imageUser.defaultImageUrl = :defaultImageUrl, " +
-                    "u.imageUser.thumbImageUrl = :thumbImageUrl, u.imageUser.mediumImageUrl = :mediumImageUrl");
+                    "u.imageUser.thumbImageUrl = :thumbImageUrl");
         }
 
         jpql.append(" WHERE u.id = :id");
@@ -86,8 +86,7 @@ public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
         if(user.checkForImage()) {
             params.and("defaultImageUrl", user.getImageUser().getDefaultImageUrl())
-                    .and("thumbImageUrl", user.getImageUser().getThumbImageUrl())
-                    .and("mediumImageUrl", user.getImageUser().getMediumImageUrl());
+                    .and("thumbImageUrl", user.getImageUser().getThumbImageUrl());
         }
 
         return params;

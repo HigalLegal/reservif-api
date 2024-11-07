@@ -17,6 +17,4 @@ public class ImageUserDTO {
 
     private String thumbImageUrl;
 
-    private String mediumImageUrl;
-
 }

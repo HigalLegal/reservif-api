@@ -25,10 +25,6 @@ public class Root {
         return data.getImage().getUrl();
     }
 
-    public String mediumUrlImage() {
-        return data.getMedium().getUrl();
-    }
-
     public String thumbUrlImage() {
         return data.getThumb().getUrl();
     }

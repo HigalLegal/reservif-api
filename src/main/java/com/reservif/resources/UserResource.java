@@ -15,7 +15,7 @@ public interface UserResource {
 
     Response login(@Valid UserLoginRequest login);
 
-    Response create(UserRequest userRequest, File image);
+    Response create(@Valid UserRequest userRequest, File image);
 
     Response update(Integer id, @Valid UserRequest userRequest, File image);
 

@@ -3,10 +3,7 @@ package com.reservif.dto.requests;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.reservif.entities.enuns.TypeUser;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,16 +16,16 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserRequest {
 
-    @Min(value = 2, message = "Deve ter ao menos 2 caracteres")
+    @Size(min = 2, message = "Deve ter ao menos 2 caracteres")
     private String firstName;
 
-    @Min(value = 2, message = "Deve ter ao menos 2 caracteres")
+    @Size(min = 2, message = "Deve ter ao menos 2 caracteres")
     private String lastName;
 
     @Email(message = "Email inválido")
     private String email;
 
-    @Min(value = 5, message = "Senha deve ter ao menos 5 caracteres")
+    @Size(min = 5, message = "Deve ter ao menos 2 caracteres")
     private String password;
 
     private String identificationCode;

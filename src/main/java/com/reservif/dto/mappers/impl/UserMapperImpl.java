@@ -41,10 +41,14 @@ public class UserMapperImpl implements UserMapper {
     }
 
     private ImageUserDTO imageUserEntitieToDTO(ImageUser imageUser) {
+
+        if(imageUser == null) {
+            return null;
+        }
+
         return ImageUserDTO
                 .builder()
                 .defaultImageUrl(imageUser.getDefaultImageUrl())
-                .mediumImageUrl(imageUser.getMediumImageUrl())
                 .thumbImageUrl(imageUser.getThumbImageUrl())
                 .build();
     }
