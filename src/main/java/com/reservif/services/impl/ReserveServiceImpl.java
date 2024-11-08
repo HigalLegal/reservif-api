@@ -38,6 +38,8 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Override
     public List<ReserveResponse> listByDateInterval(LocalDate beginning, LocalDate end) {
+        System.out.println(beginning);
+        System.out.println(end);
         return reserveRepository
                 .findByDateInterval(beginning, end)
                 .stream()
@@ -65,6 +67,7 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Override
     public List<ReserveResponse> listByStatus(StatusReserve statusReserve) {
+
         return reserveRepository
                 .findByStatus(statusReserve)
                 .stream()

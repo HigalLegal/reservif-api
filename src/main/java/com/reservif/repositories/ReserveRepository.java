@@ -71,6 +71,9 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
         }
 
         final String JPQL = generateGenericSearchByInterval("Horary");
+
+        System.out.println(JPQL);
+
         Parameters parameters = Parameters
                 .with("startHorary", beginning)
                 .and("endHorary", end);
@@ -91,7 +94,7 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
             this.findAll().list();
         }
 
-        final String JPQL = "SELECT r FROM Reserve r where r.statusReserve = :statusReserve";
+        final String JPQL = "SELECT r FROM Reserve r where r.status = :statusReserve";
         Parameters parameters = Parameters.with("statusReserve", statusReserve);
 
         return this.list(JPQL, parameters);
@@ -105,7 +108,7 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
     }
 
     public List<Reserve> findByReservableId(Integer reservableID) {
-        final String JPQL = "SELECT r FROM Reserve r where r.reservable.id = reservableID";
+        final String JPQL = "SELECT r FROM Reserve r where r.reservable.id = :reservableID";
         Parameters parameters = Parameters.with("reservableID", reservableID);
 
         return this.list(JPQL, parameters);
@@ -143,7 +146,7 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
     private String generateGenericSearchByInterval(String horaryOrDay) {
         StringBuilder jpql = new StringBuilder("SELECT r FROM Reserve r WHERE r.period.start");
         jpql.append(horaryOrDay + " >= :start" + horaryOrDay);
-        jpql.append(" AND r.period.end" + horaryOrDay + " <= :endDate");
+        jpql.append(" AND r.period.end" + horaryOrDay + " <= :end" + horaryOrDay);
 
         return jpql.toString();
     }

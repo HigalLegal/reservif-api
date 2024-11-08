@@ -22,6 +22,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -33,9 +34,6 @@ public class ReserveResourceImpl implements ReserveResource {
 
     @Inject
     private ReserveService reserveService;
-
-    @Inject
-    private JsonWebToken jsonWebToken;
 
     // ---------------------------------------------------------------------
 
@@ -52,9 +50,14 @@ public class ReserveResourceImpl implements ReserveResource {
     @GET
     @Path("/by-date-interval")
     @Authenticated
-    public Response listByDateInterval(@QueryParam("beginning") @Nullable LocalDate beginning,
-                                       @QueryParam("end") @Nullable LocalDate end) {
-        List<ReserveResponse> responses = reserveService.listByDateInterval(beginning, end);
+    public Response listByDateInterval(@QueryParam("beginning") @Nullable String beginning,
+                                       @QueryParam("end") @Nullable String end) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate startDate = LocalDate.parse(beginning, formatter);
+        LocalDate endDate = LocalDate.parse(end, formatter);
+        List<ReserveResponse> responses = reserveService.listByDateInterval(startDate, endDate);
         return Response.ok(responses).build();
     }
 
@@ -80,9 +83,9 @@ public class ReserveResourceImpl implements ReserveResource {
     @Override
     @GET
     @Path("/by-status")
-    @RolesAllowed("Administrador")
-    public Response listByStatus(@QueryParam("statusReserve") @Nullable StatusReserve statusReserve) {
-        List<ReserveResponse> responses = reserveService.listByStatus(statusReserve);
+    @Authenticated
+    public Response listByStatus(@QueryParam("statusReserve") @Nullable String statusReserve) {
+        List<ReserveResponse> responses = reserveService.listByStatus(StatusReserve.fromString(statusReserve));
         return Response.ok(responses).build();
     }
 

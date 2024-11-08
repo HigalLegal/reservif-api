@@ -13,13 +13,13 @@ public interface ReserveResource {
 
     Response listAll(Integer page, Integer pageSize);
 
-    Response listByDateInterval(LocalDate beginning, LocalDate end);
+    Response listByDateInterval(String beginning, String end);
 
     Response listByHoraryInterval(LocalTime beginning, LocalTime end);
 
     Response listByReservableName(String reservableName);
 
-    Response listByStatus(StatusReserve statusReserve);
+    Response listByStatus(String statusReserve);
 
     Response listByUser(Integer userID);
 
