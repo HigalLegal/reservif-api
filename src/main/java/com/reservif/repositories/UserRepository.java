@@ -1,6 +1,7 @@
 package com.reservif.repositories;
 
 import com.reservif.entities.User;
+import com.reservif.exceptions.DuplicityException;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -50,6 +51,12 @@ public class UserRepository implements PanacheRepositoryBase<User, Integer> {
 
     }
 
+    public void persistUser(User user) {
+        checkForDuplication(user);
+
+        this.persist(user);
+    }
+
     public void update(User user) {
         final String JPQL = generateJPQL(user);
         Parameters parameters = generateParams(user);
@@ -90,6 +97,16 @@ public class UserRepository implements PanacheRepositoryBase<User, Integer> {
         }
 
         return params;
+    }
+
+    private void checkForDuplication(User user) {
+        if(findByIdentificationCodeOrEmail(user.getEmail()).isPresent()) {
+            throw new DuplicityException("Já existe um usuário registrado com esse email!");
+        }
+
+        if(findByIdentificationCodeOrEmail(user.getIdentificationCode()).isPresent()) {
+            throw new DuplicityException("Já existe um usuário registrado com esse código SUAP!");
+        }
     }
 
 }

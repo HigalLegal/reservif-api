@@ -36,5 +36,6 @@ public class PeriodReserveDTO {
     private LocalTime endHorary;
 
     @NotNull(message = "Insira os dias da semana")
+    @Builder.Default
     private List<Integer> daysOfWeek = new ArrayList<>();
 }

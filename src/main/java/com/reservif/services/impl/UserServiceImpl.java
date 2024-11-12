@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
             user.setImageUser(imageUser);
         }
 
-        userRepository.persist(user);
+        userRepository.persistUser(user);
     }
 
     @Override

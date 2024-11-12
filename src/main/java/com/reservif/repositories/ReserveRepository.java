@@ -1,9 +1,11 @@
 package com.reservif.repositories;
 
+import com.reservif.entities.PeriodReserve;
 import com.reservif.entities.Reserve;
 import com.reservif.entities.enuns.StatusReserve;
 import com.reservif.exceptions.DateException;
 import com.reservif.exceptions.HoraryException;
+import com.reservif.exceptions.ScheduleUnavailableException;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,8 +13,11 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.reservif.repositories.utils.PaginationUtils.treatNullInteger;
@@ -72,8 +77,6 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
 
         final String JPQL = generateGenericSearchByInterval("Horary");
 
-        System.out.println(JPQL);
-
         Parameters parameters = Parameters
                 .with("startHorary", beginning)
                 .and("endHorary", end);
@@ -114,6 +117,15 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
         return this.list(JPQL, parameters);
     }
 
+    public void persistReserve(Reserve reserve) {
+
+        if(checkReservationAvailability(reserve)) {
+            throw new ScheduleUnavailableException("Essa reserva choca horário com outra reserva já feita.");
+        }
+
+        this.persist(reserve);
+    }
+
     public void update(Reserve reserve) {
         
         Reserve newReserve = this
@@ -149,6 +161,77 @@ public class ReserveRepository implements PanacheRepositoryBase<Reserve, Integer
         jpql.append(" AND r.period.end" + horaryOrDay + " <= :end" + horaryOrDay);
 
         return jpql.toString();
+    }
+
+    private boolean checkReservationAvailability(Reserve newReservation) {
+        List<Reserve> allReserves = this.findAll(null, null);
+
+        for (Reserve reserve : allReserves) {
+            if (checkReservationAvailabilityAux(newReservation, reserve)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean checkReservationAvailabilityAux(Reserve newReserve, Reserve oldReserve) {
+
+        if(newReserve.getReservable().getId() != oldReserve.getReservable().getId()) {
+            return false;
+        }
+
+        PeriodReserve newReservation = newReserve.getPeriod();
+        PeriodReserve oldReservation = oldReserve.getPeriod();
+
+        return dayWeekOverlap(newReservation, oldReservation) &&
+                datesOverlap(newReservation.getStartDay(), newReservation.getEndDay(), oldReservation.getStartDay(), oldReservation.getEndDay()) &&
+                timesOverlap(newReservation.getStartHorary(), newReservation.getEndHorary(), oldReservation.getStartHorary(), oldReservation.getEndHorary());
+    }
+
+    private boolean dayWeekOverlap(PeriodReserve newReservation, PeriodReserve oldReservation) {
+
+        List<DayOfWeek> daysOfWeek1 = generateDaysOfWeek(newReservation.getDaysOfWeek(), newReservation);
+        List<DayOfWeek> daysOfWeek2 = generateDaysOfWeek(oldReservation.getDaysOfWeek(), oldReservation);
+
+        return !Collections.disjoint(daysOfWeek1, daysOfWeek2);
+    }
+
+    public static boolean datesOverlap(LocalDate startDate1, LocalDate endDate1,
+                                          LocalDate startDate2, LocalDate endDate2) {
+        return (startDate1.isBefore(endDate2) || startDate1.isEqual(endDate2)) &&
+                (startDate2.isBefore(endDate1) || startDate2.isEqual(endDate1));
+    }
+    private boolean timesOverlap(LocalTime start1, LocalTime end1, LocalTime start2, LocalTime end2) {
+        return (start1.isBefore(end2)) && (start2.isBefore(end1));
+    }
+
+    private List<DayOfWeek> generateDaysOfWeek(List<DayOfWeek> daysOfWeek, PeriodReserve periodReserve) {
+        if(!daysOfWeek.isEmpty()) {
+            return daysOfWeek;
+        }
+
+        List<DayOfWeek> daysOfTheWeekGenerated = new ArrayList<>();
+
+        DayOfWeek dayOfWeek1 = periodReserve.getStartDay().getDayOfWeek();
+        DayOfWeek dayOfWeek2 = periodReserve.getEndDay().getDayOfWeek();
+
+
+        daysOfTheWeekGenerated.add(dayOfWeek1);
+        daysOfTheWeekGenerated.add(dayOfWeek2);
+
+        return daysOfTheWeekGenerated;
+    }
+
+    private boolean checkIntersection(List<DayOfWeek> daysOfWeek1, List<DayOfWeek> daysOfWeek2) {
+
+        for(DayOfWeek dayOfWeek : daysOfWeek1) {
+            if(daysOfWeek2.contains(dayOfWeek)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

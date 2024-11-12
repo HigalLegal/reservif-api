@@ -106,7 +106,7 @@ public class ReserveServiceImpl implements ReserveService {
     public void create(ReserveRequest reserveRequest) {
         Reserve reserve = reserveMapper.requestToEntitie(reserveRequest);
 
-        reserveRepository.persist(reserve);
+        reserveRepository.persistReserve(reserve);
     }
 
     @Override

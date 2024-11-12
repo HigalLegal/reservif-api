@@ -36,6 +36,7 @@ public class PeriodReserve {
 
     @ElementCollection
     @Enumerated(EnumType.ORDINAL)
+    @Builder.Default
     private List<DayOfWeek> daysOfWeek = new ArrayList<>();
 
 }
