@@ -92,7 +92,7 @@ public class ReserveResourceImpl implements ReserveResource {
     @Override
     @GET
     @Path("/by-user")
-    @RolesAllowed("Administrador")
+    @Authenticated
     public Response listByUser(@QueryParam("userID") Integer userID) {
         List<ReserveResponse> responses = reserveService.listByUser(userID);
         return Response.ok(responses).build();
@@ -156,7 +156,7 @@ public class ReserveResourceImpl implements ReserveResource {
     @DELETE
     @Path("/{id}")
     @Transactional
-    @RolesAllowed("Administrador")
+    @Authenticated
     public Response deleteById(Integer id) {
         reserveService.deleteById(id);
         return Response
