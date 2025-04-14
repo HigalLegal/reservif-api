@@ -24,6 +24,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-rest'
     implementation 'de.svenkubiak:jBCrypt:0.4.3'
     implementation 'io.quarkus:quarkus-rest-client-reactive-jackson'
+    implementation 'io.quarkus:quarkus-container-image-docker:3.21.2'
 
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
