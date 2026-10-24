@@ -23,7 +23,7 @@ O `docker-compose.yml` inicia o PostgreSQL e a imagem da API `higal-legal/reserv
 
 ```bash
 ./gradlew clean build
-docker build -f src/main/docker/Dockerfile.jvm -t higal-legal/reservif:1.0.0-SNAPSHOT .
+docker build
 docker compose up -d
 ```
 
